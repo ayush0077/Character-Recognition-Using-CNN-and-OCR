@@ -1,0 +1,82 @@
+import tkinter as tk
+from tkinter import filedialog
+from PIL import Image, ImageTk
+import cv2
+from tensorflow.keras.models import load_model
+import Words
+import Character
+import Predict
+# Load your model
+model1 = load_model(r'D:\Downloads\Downloads\Devanagari-Character-Recognition-main\Devanagari-Character-Recognition-main\Model_1\best_val_acc.hdf5')
+
+# Store your model in a list (only model1)
+Models = [model1]
+
+Label_Dict = {0: 'क', 1: 'ख', 2: 'ग', 3: 'घ', 4: 'ङ',
+              5: 'च', 6: 'छ', 7: 'ज', 8: 'झ', 9: 'ञ',
+              10: 'ट', 11: 'ठ', 12: 'ड', 13: 'ढ', 14: 'ण',
+              15: 'त', 16: 'थ', 17: 'द', 18: 'ध', 19: 'न',
+              20: 'प', 21: 'फ', 22: 'ब', 23: 'भ', 24: 'म',
+              25: 'य', 26: 'र', 27: 'ल', 28: 'व', 29: 'श',
+              30: 'ष', 31: 'स', 32: 'ह', 33: 'क्ष', 34: 'त्र', 35: 'ज्ञ',
+              36: 'अ', 37: 'आ', 38: 'इ', 39: 'ई', 40: 'उ', 41: 'ऊ', 42: 'ऋ', 43: 'ए', 44: 'ऐ', 45: 'ओ', 46: 'औ', 47: 'अं', 48: 'अ:'}
+
+class DevanagariCharacterRecognitionApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Devanagari Character Recognition")
+
+        self.image_path = None
+
+        # Create GUI components
+        self.label = tk.Label(root, text="Select an image:")
+        self.label.pack(pady=10)
+
+        self.browse_button = tk.Button(root, text="Browse", command=self.browse_image)
+        self.browse_button.pack(pady=5)
+
+        self.predict_button = tk.Button(root, text="Predict", command=self.predict_image)
+        self.predict_button.pack(pady=10)
+
+        self.result_label = tk.Label(root, text="Predicted Result:")
+        self.result_label.pack(pady=5)
+
+        # Create canvas for displaying images
+        self.canvas = tk.Canvas(root, width=400, height=400)
+        self.canvas.pack()
+
+        # Create a text widget for displaying predicted result
+        self.text_widget = tk.Text(root, height=2, width=50)
+        self.text_widget.pack(pady=10)
+
+    def browse_image(self):
+        self.image_path = filedialog.askopenfilename(filetypes=[("Image files", "*.png;*.jpg;*.jpeg")])
+        self.load_and_display_image()
+
+    def load_and_display_image(self):
+        if self.image_path:
+            image = Image.open(self.image_path)
+            image = image.resize((400, 400), Image.ANTIALIAS)
+            self.tk_image = ImageTk.PhotoImage(image)
+            self.canvas.create_image(0, 0, anchor=tk.NW, image=self.tk_image)
+
+    def predict_image(self):
+        if self.image_path:
+            # Load the image and perform predictions
+            image = cv2.imread(self.image_path)
+            words = Words.Split(image)
+            characters = Character.Split(words)
+            predictions = Predict.Predict(characters, Models, Label_Dict)
+
+            # Display the result in the text widget
+            result = " ".join(["".join(word) for word in predictions])
+            self.text_widget.delete("1.0", tk.END)  # Clear previous text
+            self.text_widget.insert(tk.END, result)
+        else:
+            self.text_widget.delete("1.0", tk.END)  # Clear previous text
+            self.text_widget.insert(tk.END, "No image selected. Please browse and select an image.")
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = DevanagariCharacterRecognitionApp(root)
+    root.mainloop()
