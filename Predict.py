@@ -4,7 +4,7 @@ import numpy as np
 
 from scipy import stats
 from keras.models import load_model
-model1 = load_model(r'D:\Downloads\Downloads\Devanagari-Character-Recognition-main\Devanagari-Character-Recognition-main\Model_1\best_val_acc.hdf5')
+model1 = load_model(r'D:\best_val.hdf5')
 Models = [model1]
 Label_Dict = {0: 'क', 1: 'ख', 2: 'ग', 3: 'घ', 4: 'ङ',
               5: 'च', 6: 'छ', 7: 'ज', 8: 'झ', 9: 'ञ',

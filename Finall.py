@@ -1,12 +1,12 @@
 import os
 import cv2
 from tensorflow.keras.models import load_model
-import Split_Words
-import Split_Characters
-import Predict_Characters
+import Words
+import Characters
+import Predict
 
 # Load your model
-model1 = load_model(r'D:\Downloads\Downloads\Devanagari-Character-Recognition-main\Devanagari-Character-Recognition-main\Model_1\best_val_acc.hdf5')
+model1 = load_model(r'D:\best_val_acc.hdf5')
 
 # Store your model in a list (only model1)
 Models = [model1]
@@ -25,9 +25,9 @@ Label_Dict = {0: 'क', 1: 'ख', 2: 'ग', 3: 'घ', 4: 'ङ',
 
 Word_Predictions = []                
 for Image_Name in Images:
-    Words = Split_Words.Split(cv2.imread(os.path.join(Path, Image_Name)))
-    Characters = Split_Characters.Split(Words)
-    Predictions = Predict_Characters.Predict(Characters, Models, Label_Dict, Evaluate=True)
+    Words = Words.Split(cv2.imread(os.path.join(Path, Image_Name)))
+    Characters = Characters.Split(Words)
+    Predictions = Predict.Predict(Characters, Models, Label_Dict, Evaluate=True)
 
     Word_Predictions_per_image = []
     for Prediction in Predictions:
