@@ -9,7 +9,7 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.callbacks import ModelCheckpoint, ReduceLROnPlateau, CSVLogger, EarlyStopping
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
 
-project_directory = r'D:\Downloads\Downloads\Devanagari-Character-Recognition-main\Devanagari-Character-Recognition-main'
+project_directory = r'D:\Downloads'
 os.chdir(project_directory)
 trainDataGen = ImageDataGenerator(rotation_range = 5,
                                   width_shift_range = 0.1,
